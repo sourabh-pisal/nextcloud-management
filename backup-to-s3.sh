@@ -50,7 +50,7 @@ fi
 
 # Sync data directory to S3
 echo "Syncing data directory to S3..."
-aws s3 sync "$DATA_DIR/" "s3://$S3_BUCKET/data/"
+aws s3 sync "$DATA_DIR/" "s3://$S3_BUCKET/data/" --delete
 if [ $? -ne 0 ]; then
     echo "Data directory sync to S3 failed!" >&2
     sudo -u www-data php --define apc.enable_cli=1 "$NEXTCLOUD_DIR/occ" maintenance:mode --off
@@ -59,7 +59,7 @@ fi
 
 # Sync config directory to S3
 echo "Syncing config directory to S3..."
-aws s3 sync "$NEXTCLOUD_DIR/config/" "s3://$S3_BUCKET/config/"
+aws s3 sync "$NEXTCLOUD_DIR/config/" "s3://$S3_BUCKET/config/" --delete
 if [ $? -ne 0 ]; then
     echo "Config directory sync to S3 failed!" >&2
     sudo -u www-data php --define apc.enable_cli=1 "$NEXTCLOUD_DIR/occ" maintenance:mode --off
