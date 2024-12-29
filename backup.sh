@@ -17,28 +17,28 @@ DB_PASSWORD=$(grep "'dbpassword'" "$CONFIG_FILE" | awk -F "=> " '{print $2}' | t
 sudo -u www-data php --define apc.enable_cli=1 /var/www/nextcloud/occ maintenance:mode --on
 
 # create backup directory
-mkdir -p $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX
+sudo mkdir -p $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX
 
 # Change dir to backup directory
 cd $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX
 
 # Copy data directory
-rsync -Aax $DATA_DIR/ $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX/data/
+sudo rsync -Aax $DATA_DIR/ $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX/data/
 
 # Copy config directory
-rsync -Aax --exclude='data' $CONFIG_DIR/ $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX/config/
+sudo rsync -Aax --exclude='data' $CONFIG_DIR/ $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX/config/
 
 # Taking snapshot of database
-mysqldump --single-transaction -default-character-set=utf8mb4 -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME > nextcloud-sqlbkp.bak
+sudo mysqldump --single-transaction -default-character-set=utf8mb4 -h $DB_HOST -u $DB_USER -p$DB_PASSWORD $DB_NAME > nextcloud-sqlbkp.bak
 
 # Change to home directory
 cd
 
 # Create zip of backup directory
-zip -rq $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX $BACKUP_DIR_DATE_SUFFIX
+sudo zip -rq $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX $BACKUP_DIR_DATE_SUFFIX
 
 # Cleanup backup directory
-rm -rf $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX
+sudo rm -rf $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX
 
 # Disable maintenance mode
 sudo -u www-data php --define apc.enable_cli=1 /var/www/nextcloud/occ maintenance:mode --off
