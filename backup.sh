@@ -1,6 +1,10 @@
 #!/bin/bash
 
 # Script to backup Nextcloud data, database, and config files
+#
+# Measure script execution time
+START_TIME=$(date +%s)
+
 # Arguments
 NEXTCLOUD_DIR="$1"
 BACKUP_DIR="$2"
@@ -50,3 +54,9 @@ fi
 # Disable maintenance mode
 sudo -u www-data php --define apc.enable_cli=1 "$NEXTCLOUD_DIR/occ" maintenance:mode --off
 
+# Measure end time and calculate total duration
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+
+# Print total time taken
+echo "Backup completed in $DURATION seconds."
