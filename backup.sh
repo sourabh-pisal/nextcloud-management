@@ -13,6 +13,9 @@ DB_HOST=$(grep "'dbhost'" "$CONFIG_FILE" | awk -F "=> " '{print $2}' | tr -d "',
 DB_USER=$(grep "'dbuser'" "$CONFIG_FILE" | awk -F "=> " '{print $2}' | tr -d "', ")
 DB_PASSWORD=$(grep "'dbpassword'" "$CONFIG_FILE" | awk -F "=> " '{print $2}' | tr -d "', ")
 
+# Enable maintenance mode
+sudo -u www-data php --define apc.enable_cli=1 /var/www/nextcloud/occ maintenance:mode --on
+
 # create backup directory
 mkdir -p $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX
 
@@ -37,3 +40,5 @@ zip -rq $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX $BACKUP_DIR_DATE_SUFFIX
 # Cleanup backup directory
 rm -rf $BACKUP_DIR/$BACKUP_DIR_DATE_SUFFIX
 
+# Disable maintenance mode
+sudo -u www-data php --define apc.enable_cli=1 /var/www/nextcloud/occ maintenance:mode --off
