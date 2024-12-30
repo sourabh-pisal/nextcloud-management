@@ -12,7 +12,7 @@ fi
 
 # Stop Apache server
 echo "Stopping Apache server"
-sudo systemctl apache2
+sudo systemctl stop apache2
 
 # Unmount encrypted drive
 echo "Unmounting encrypted drive"
